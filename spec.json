@@ -1,0 +1,23 @@
+{
+ "slug":"datacat","name":"DataCat","backlog_name":"DataCat","code":"Stym79","tid":"1e296fc8-476e-4d8b-a0d6-991623ec642e",
+ "upstream":"https://github.com/replit/datacat (Apache-2.0), built from commit f08fb63 (no releases yet)",
+ "services":[
+  {"name":"datacat","image":"ghcr.io/onepush-dev/datacat:f08fb63","port":8080,"volume":null,"healthcheck":"/api/healthz","restart":"ALWAYS (10)","public":true},
+  {"name":"postgres","image":"postgres:16-alpine","port":5432,"volume":"/var/lib/postgresql","healthcheck":null,"restart":"ON_FAILURE (10)","public":false}],
+ "env_vars":{
+  "datacat":{"DATABASE_URL":"postgresql://postgres:${{postgres.POSTGRES_PASSWORD}}@${{postgres.RAILWAY_PRIVATE_DOMAIN}}:5432/postgres","PUBLIC_URL":"https://${{RAILWAY_PUBLIC_DOMAIN}}","SESSION_SECRET":"${{secret(64)}}","DATACAT_SETUP_TOKEN":"${{secret(32)}}"},
+  "postgres":{"POSTGRES_PASSWORD":"${{secret(32)}}"}},
+ "baked_env":{"PORT":"8080","DATACAT_TRUST_PROXY":"1","DATACAT_RETENTION_DAYS":"15","NODE_ENV":"production"},
+ "var_descriptions":{
+  "datacat.DATABASE_URL":"Postgres connection string, built from the bundled postgres service",
+  "datacat.PUBLIC_URL":"Canonical public HTTPS origin used for invite links and the agent installer; update it if you add a custom domain",
+  "datacat.SESSION_SECRET":"Generated key that signs session cookies",
+  "datacat.DATACAT_SETUP_TOKEN":"Generated secret the first-run setup page asks for before creating the admin account",
+  "postgres.POSTGRES_PASSWORD":"Generated Postgres superuser password"},
+ "title":"DataCat (Self-Hosted Observability)","short_desc":"Self-hosted metrics, logs and traces dashboard by Replit","category":"Monitoring",
+ "icon_note":"mdi/chart-timeline-variant (neutral; upstream logo reuse not checked); postgres: devicon postgresql",
+ "service_icons":{"datacat":"https://api.iconify.design/mdi/chart-timeline-variant.svg","postgres":"https://devicons.railway.app/postgresql"},
+ "angle":"Replit's brand-new open-source Datadog-style observability stack (3 days old at the time of the build): metrics, logs, APM traces, dashboards and monitors, with OTLP and Datadog-agent-compatible intake, in one container plus Postgres. Zero inputs on Railway: generated session secret and setup token, proxy trust and 15-day retention baked in, ClickHouse intentionally skipped (Postgres storage is the upstream default).",
+ "notes":"No upstream image or releases, so ghcr.io/onepush-dev/datacat:f08fb63 is built from replit/datacat at commit f08fb63 with the same steps as upstream's Dockerfile (code unmodified). PORT=8080, DATACAT_TRUST_PROXY=1 and DATACAT_RETENTION_DAYS=15 are baked into the image (plain variables are dropped by templates create). Setup token is the DATACAT_SETUP_TOKEN service variable. Telemetry is stored in Postgres (hourly retention cleanup). No volume on datacat: only agent downloads dir (empty). Not affiliated with Replit/DataCat.",
+ "fresh_test":"Built + FRESH-TEST PASSED Nov 20 ~10:52 AM IST: test-datacat from Stym79 (datacat + postgres) deployed first try with no inputs; /api/healthz 200; UI 200; wrong setup token 403; admin created with generated DATACAT_SETUP_TOKEN; API key created; OTLP log sent to /otlp/v1/logs and found via log search; after redeploying postgres then datacat, login works and the log is still searchable (persistence OK)."
+}

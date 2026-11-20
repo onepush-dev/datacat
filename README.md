@@ -2,7 +2,7 @@
 
 [DataCat](https://github.com/replit/datacat) (Apache-2.0) — a self-hosted, Datadog-style observability platform from Replit: metrics, logs, APM traces, dashboards and monitors with OTLP intake. Deploy it on Railway with one click.
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/PLACEHOLDER)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/Stym79)
 
 ## What this template runs
 
